@@ -25,8 +25,6 @@
 #include <vector>
 #include <map>
 
-#include "mfx_c2_widevine_crypto_defs.h"
-
 enum MfxC2FrameConstructorType
 {
     MfxC2FC_None,
@@ -238,71 +236,6 @@ protected: // data
 
 private:
     MFX_CLASS_NO_COPY(MfxC2HEVCFrameConstructor)
-};
-
-class MfxC2SecureFrameConstructor
-{
-public:
-    MfxC2SecureFrameConstructor();
-    virtual ~MfxC2SecureFrameConstructor();
-protected:
-    virtual mfxStatus Load(const mfxU8* data, mfxU32 size, mfxU64 pts, bool header, bool complete_frame);
-
-    // metadata of hucbuffer
-    HUCVideoBuffer* m_hucBuffer = nullptr;
-    // bs buffer used for WV L1
-    std::shared_ptr<mfxBitstream> m_bstEnc;
-    // ext buffer vector
-    std::vector<mfxExtBuffer*> m_extBufs;
-    // MFX_EXTBUFF_ENCRYPTION_PARAM
-    mfxExtEncryptionParam m_decryptParams;
-
-private:
-    MFX_CLASS_NO_COPY(MfxC2SecureFrameConstructor)
-};
-
-class MfxC2AVCSecureFrameConstructor : public MfxC2HEVCFrameConstructor, public MfxC2SecureFrameConstructor
-{
-public:
-    MfxC2AVCSecureFrameConstructor();
-    virtual ~MfxC2AVCSecureFrameConstructor();
-
-    virtual mfxStatus Load(const mfxU8* data, mfxU32 size, mfxU64 pts, bool b_header, bool bCompleteFrame);
-    virtual mfxStatus Load_data(const mfxU8* data, mfxU32 size, const mfxU8* infobuffer, mfxU64 pts, bool header, bool complete_frame);
-    
-protected:
-    virtual StartCode ReadStartCode(const mfxU8** position, mfxU32* size_left);
-    virtual bool   isSPS(mfxI32 code) {return MfxC2AVCFrameConstructor::isSPS(code);}
-    virtual bool   isPPS(mfxI32 code) {return MfxC2AVCFrameConstructor::isPPS(code);}
-    virtual bool   isIDR(mfxI32 code) {return NAL_UT_AVC_IDR_SLICE == code;}
-    virtual bool   isRegularSlice(mfxI32 code) {return NAL_UT_AVC_SLICE == code;}
-
-    std::shared_ptr<mfxBitstream> GetMfxBitstream();
-
-protected:
-    bool m_bNeedAttachSPSPPS;
-
-    const static mfxU32 NAL_UT_AVC_SLICE       = 1;
-    const static mfxU32 NAL_UT_AVC_IDR_SLICE   = 5;
-
-private:
-    MFX_CLASS_NO_COPY(MfxC2AVCSecureFrameConstructor)
-};
-
-/*------------------------------------------------------------------------------*/
-
-class MfxC2HEVCSecureFrameConstructor : public MfxC2AVCSecureFrameConstructor
-{
-public:
-    MfxC2HEVCSecureFrameConstructor();
-    virtual ~MfxC2HEVCSecureFrameConstructor();
-
-protected:
-    virtual bool   isSPS(mfxI32 code) {return MfxC2HEVCFrameConstructor::isSPS(code);}
-    virtual bool   isPPS(mfxI32 code) {return MfxC2HEVCFrameConstructor::isPPS(code);}
-
-private:
-    MFX_CLASS_NO_COPY(MfxC2HEVCSecureFrameConstructor)
 };
 
 class MfxC2FrameConstructorFactory

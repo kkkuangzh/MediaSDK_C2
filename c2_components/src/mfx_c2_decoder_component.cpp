@@ -966,7 +966,13 @@ void MfxC2DecoderComponent::InitFrameConstructor()
         fc_type = MfxC2FC_None;
         break;
     }
-    m_c2Bitstream = std::make_unique<MfxC2BitstreamIn>(fc_type);
+
+    if (fc_type == MfxC2FC_SEC_AVC || fc_type == MfxC2FC_SEC_HEVC)
+    {
+        m_c2Bitstream = std::make_unique<MfxC2SecureBitstreamIn>(fc_type);
+    } else {
+        m_c2Bitstream = std::make_unique<MfxC2BitstreamIn>(fc_type);
+    }
 }
 
 #ifdef USE_ONEVPL

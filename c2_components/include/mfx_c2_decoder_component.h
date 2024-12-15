@@ -26,6 +26,7 @@
 #include "mfx_cmd_queue.h"
 #include "mfx_c2_frame_out.h"
 #include "mfx_c2_bitstream_in.h"
+#include "mfx_c2_secure_bitstream_in.h"
 #include "mfx_frame_pool_allocator.h"
 #include "mfx_gralloc_instance.h"
 #include "mfx_intel_device.h"
