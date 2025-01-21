@@ -676,7 +676,7 @@ std::string FormatHex(const uint8_t* data, size_t len)
     std::ostringstream ss;
     ss << std::hex;
     for (size_t i = 0; i < len; ++i) {
-        if (i > 40) {
+        if (i > 60) {
             ss << std::dec << std::setw(0) << "... [" << len << "]";
             break;
         }
