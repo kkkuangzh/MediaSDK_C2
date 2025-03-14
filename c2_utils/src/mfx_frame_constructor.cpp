@@ -566,7 +566,7 @@ mfxStatus MfxC2AVCFrameConstructor::LoadHeader(const mfxU8* data, mfxU32 size, b
     bool bFoundSei = false;
 
     m_appendHeaderSize = 0;
-    if (header && data && size) {
+    if (header && data && size && (MfxC2BS_Resetting != m_bsState)) {
         if (MfxC2BS_HeaderAwaiting == m_bsState) m_bsState = MfxC2BS_HeaderCollecting;
 
         mfx_res = FindHeaders(data, size, bFoundSps, bFoundPps, bFoundSei);
